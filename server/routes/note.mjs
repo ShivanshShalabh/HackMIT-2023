@@ -20,8 +20,8 @@ router.post("/submit", async (req, res) => {
     const allNotes = oldNote + "\n\n" + note;
     const summarizedNote = await summarizeText(allNotes);
     const noteUpdate = await NoteDB.findOneAndUpdate({ _id: oldNote._id }, summarizedNote, { new: true });
-
-    console.log(noteUpdate);
+    if (noteUpdate)
+      res.send("Note saved").status(200);
 
   }
   else {
@@ -32,7 +32,7 @@ router.post("/submit", async (req, res) => {
       college
     });
     await newNote.save();
-    res.send("Note saved");
+    res.send("Note saved").status(200);
 
   }
 });
@@ -45,10 +45,11 @@ router.post("/get", async (req, res) => {
 
   const note = await NoteDB.findOne({ course, college });
   if (note) {
-    res.send(note.note);
+    res.send(note.note).status(200);
   }
   else {
     res.send("Note not found").status(404);
+    console.log("Note not found");
   }
 });
 
