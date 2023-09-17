@@ -1,7 +1,7 @@
 import express from "express";
-import noteDB from "../models/notes.js";
+import NoteDB from "../models/notes.js";
 const router = express.Router();
-
+import summarizeText from "../utils/summarize.mjs";
 
 
 
@@ -9,18 +9,23 @@ router.post("/note", async (req,res) => {
   const note = req.body.note;
   const course = req.body.course;
   const college = req.body.college;
+  if(!note || !course || !college) { console.log(note, course, college); return; };
   // check if note exists
   // if not, create it
   console.log(note, course, college);
   
-  const oldNote = await noteDB.find({ course, college });
+  const oldNote = await NoteDB.findOne({ course, college });
+  console.log("****",oldNote);
+
   if (oldNote) {
-      lastNote = oldNote[oldNote.length - 1];
-      console.log(lastNote);
+      let lastNote = oldNote;
+      console.log("OLD",lastNote);
+      res.send("Note Exists");
   }
-  else {
-      const newNote = new note({
-          note,
+  else {    
+    const summarizedNote = await summarizeText(note);
+      const newNote = new NoteDB({
+          note: summarizedNote,
           course,
           college
       });

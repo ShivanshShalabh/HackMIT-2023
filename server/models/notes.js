@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const NoteSchema = new mongoose.Schema({
-    noteID: {
-        type: mongoose.Schema.Types.ObjectId,
-        unique: true
-    },
     college: {
         type: String
     },
@@ -13,7 +9,7 @@ const NoteSchema = new mongoose.Schema({
     },
     
     note: {
-        type: Object
+        type: String
     },
     tags: {
         type: Array
